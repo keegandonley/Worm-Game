@@ -7,9 +7,15 @@ Board::Board(int row, int col) {
     }
 
     int fp    = (row - 2) * (col - 2);
+    currentPos.x = row/2;
+    currentPos.y = col/2;
+    activeMunchie = false;
+    munchieValue = 0;
+    munchieCountdown = 0;
+    liveMunchie = false;
     lastIdx   = fp - 1;
     freepool  = new coord [fp];
-    worm      = new coord [fp]; 
+    worm      = new coord [fp];
     int count = 0;
 
     for (int i = 0; i < row; i++) {
@@ -27,4 +33,14 @@ Board::Board(int row, int col) {
             }
         }
     }
+}
+
+void Board::removeFromFree(int x, int y) {
+    int location = board[x][y]; // This is the freepool index to delete
+    coord swap = freepool[lastIdx]; // This is the coordinates we must keep!
+    coord temp = freepool[location]; // This is the coordinates we are deleting!
+    freepool[location] = swap;
+    freepool[lastIdx] = temp;
+    board[swap.x][swap.y] = location;
+    board[x][y] = - 1;
 }

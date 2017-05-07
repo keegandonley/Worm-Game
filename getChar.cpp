@@ -28,11 +28,11 @@ char get_char( )
 
      if ( retval < 0 )
 	 die();
-     
+
      if ( retval ) {
          if ( read(0, &c, 1) < 0)
              die();
-//         if( c == LEFT || c == RIGHT || c == UP || c == DOWN ) 
+//         if( c == LEFT || c == RIGHT || c == UP || c == DOWN )
          lastc = c;
      }
      return( lastc );

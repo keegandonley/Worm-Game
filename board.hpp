@@ -14,6 +14,7 @@ public:
 	       return board[x][y];
     }
     void removeFromFree(int x, int y);
+    void addToFree(int x, int y);
     int  getLastIdx() {
 	       return lastIdx;
     }
@@ -38,15 +39,23 @@ public:
     int& getMunchieCountdown() {
         return munchieCountdown;
     }
+    int& getScore() {
+        return totalScore;
+    }
 private:
     int     lastIdx;
     int   **board;
     coord * freepool;
     coord * worm;
+
+    int head;
+    int tail;
+
     bool activeMunchie;
     bool liveMunchie;
     int munchieValue;
     int munchieCountdown;
+    int totalScore;
     coord currentPos;
     coord previousPos;
     coord currentMunchiePos;

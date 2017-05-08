@@ -1,5 +1,7 @@
 #include "board.hpp"
 #include <iostream>
+#include <curses.h>
+
 Board::Board(int row, int col) {
     board = new int * [row];
     for (int i = 0; i < row; i++) {
@@ -16,6 +18,8 @@ Board::Board(int row, int col) {
     lastIdx   = fp - 1;
     freepool  = new coord [fp];
     worm      = new coord [fp];
+    head = tail = 0;
+    totalScore = 0;
     int count = 0;
 
     for (int i = 0; i < row; i++) {
@@ -43,4 +47,16 @@ void Board::removeFromFree(int x, int y) {
     freepool[lastIdx] = temp;
     board[swap.x][swap.y] = location;
     board[x][y] = - 1;
+    lastIdx--;
+}
+
+void Board::addToFree(int x, int y) {
+    if (board[x][y] == -1) {
+        Board::coord temp;
+        temp.x = x;
+        temp.y = y;
+        lastIdx++;
+        freepool[lastIdx] = temp;
+        board[x][y] = lastIdx;
+    }
 }

@@ -6,9 +6,10 @@
 #include <sgtty.h>
 #include <curses.h>
 #include <signal.h>
+#include "directions.hpp"
 
 const int SEC_DELAY = 0;
-const int USEC_DELAY = 800000;
+const int USEC_DELAY = 400000;
 static char lastc = ' ';
 void die( void );
 char get_char( void );
@@ -32,8 +33,8 @@ char get_char( )
      if ( retval ) {
          if ( read(0, &c, 1) < 0)
              die();
-//         if( c == LEFT || c == RIGHT || c == UP || c == DOWN )
-         lastc = c;
+         if( c == LEFT || c == RIGHT || c == UP || c == DOWN )
+            lastc = c;
      }
      return( lastc );
 }

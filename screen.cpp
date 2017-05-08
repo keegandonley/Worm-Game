@@ -3,11 +3,18 @@
 #include <iostream>
 #include "getChar.hpp"
 #include "board.hpp"
+#include "directions.hpp"
 #include <string>
 #include <iomanip>
+
+const int verticalOffset = 1;
+
 void startup( void );
 void terminate( void );
-int genMunchies(Board * game);
+void genMunchies(Board * game, int numRows, int numCols);
+void moveWorm(Board * game, char c);
+bool validate(Board * game, int numRows, int numCols);
+void displayChar(int x, int y, char c);
 
 int main(int argc, const char * argv[])
 {
@@ -27,48 +34,28 @@ int main(int argc, const char * argv[])
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numCols; j++) {
             if (i == 0 || i == numRows - 1 || j == 0 || j == numCols - 1)
-                mvaddch(i,j,'*');
+                displayChar(i,j,'*');
         }
     }
+    mvaddstr(0,0,"Worm Game");
+    mvaddstr(0, numCols-12, "Score: ");
     refresh();
     Board * game = new Board(numRows, numCols);
 
     bool seenMunchie = false;
     int munchieCount = 0;
     char c;
-    mvaddch(game -> getCurrent().x, game -> getCurrent().y, '@');
-    genMunchies(game);
+    displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
+    genMunchies(game, numRows, numCols);
     refresh();
     while (c = get_char()) {
-        // Generates a munchy whenever needed, and handles checking if we have seen it or not.
-        genMunchies(game);
-
-    	if (c == 'q') {
-    	    break;
-    	} else if (c == 'a') {
-    		(game -> getCurrent().y)--;
-    	} else if (c == 's') {
-    		(game -> getCurrent().x)++;
-    	} else if (c == 'd') {
-    		(game -> getCurrent().y)++;
-    	} else if (c == 'w') {
-    		(game -> getCurrent().x)--;
-    	}
-
-    	if (game -> getCurrent().x == 0 ||
-        game -> getCurrent().x == numRows - 1 ||
-        game -> getCurrent().y == 0 ||
-        game -> getCurrent().y == numCols - 1)
-    		break;
-    	if (game -> getMatrixVal(game -> getCurrent().x, game -> getCurrent().y) == -1)
-    		break;
-
-        // Remove the previous head location
-    	mvaddch(game -> getPrevious().x, game -> getPrevious().y, ' ');
-        // Add the head in the new spot
-    	mvaddch(game -> getCurrent().x, game -> getCurrent().y, '@');
-        game -> getPrevious().x = game -> getCurrent().x;
-        game -> getPrevious().y = game -> getCurrent().y;
+        // Generates a munchy whenever needed
+        genMunchies(game, numRows, numCols);
+        // Makes the move
+        moveWorm(game, c);
+        // Makes sure current position is legal
+        if (!validate(game, numRows, numCols)) { break; }
+        // Update display
     	refresh();
     }
     terminate();
@@ -76,7 +63,71 @@ int main(int argc, const char * argv[])
     return 0;
 }
 
-int genMunchies(Board * game) {
+bool validate(Board * game, int numRows, int numCols) {
+    // Checks if we hit the walls
+    if (game -> getCurrent().x == 0 ||
+    game -> getCurrent().x == numRows - 1 ||
+    game -> getCurrent().y == 0 ||
+    game -> getCurrent().y == numCols - 1)
+        return false;
+
+    // Checks if we hit ourself
+    if (game -> getMatrixVal(game -> getCurrent().x, game -> getCurrent().y) == -1)
+        return false;
+
+    return true;
+}
+
+void moveWorm(Board * game, char c) {
+    if (c == LEFT) {
+        (game -> getCurrent().y)--;
+    } else if (c == DOWN) {
+        (game -> getCurrent().x)++;
+    } else if (c == RIGHT) {
+        (game -> getCurrent().y)++;
+    } else if (c == UP) {
+        (game -> getCurrent().x)--;
+    }
+
+    Board::coord head;
+    head.x = game -> getCurrent().x;
+    head.y = game -> getCurrent().y;
+
+    // Move the head
+    if (game -> getPrevious().x != 0 && game -> getPrevious().y != 0) {
+        displayChar(game -> getPrevious().x, game -> getPrevious().y, ' ');
+        displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
+        refresh();
+    }
+
+
+    // Update the free pool
+    // game -> removeFromFree(game -> getCurrent().x, game -> getCurrent().y);
+    // game -> addToFree(game -> getPrevious().x, game -> getPrevious().y);
+
+    // Update the previous position
+    game -> getPrevious().x = game -> getCurrent().x;
+    game -> getPrevious().y = game -> getCurrent().y;
+}
+
+void genMunchies(Board * game, int numRows, int numCols) {
+    std::string temp;
+    temp = std::to_string(game -> getScore());
+    const char * output = temp.c_str();
+    mvaddstr(0, numCols -4, output);
+    refresh();
+    
+    if (game -> getCurrent().x == game -> getMunchie().x && game -> getCurrent().y == game -> getMunchie().y) {
+        game -> getMunchieCountdown() += game -> getMunchieValue();
+        game -> getScore() += game -> getMunchieValue();
+        game -> getMunchieValue() = 0;
+        game -> isLiveMunchie() = false;
+    }
+
+    if (game -> getMunchieCountdown() > 0) {
+        game -> getMunchieCountdown()--;
+    }
+
     if (!game -> isLiveMunchie()) {
         int lastIdx = game -> getLastIdx();
         int munchieLocation = rand() % lastIdx;
@@ -86,22 +137,9 @@ int genMunchies(Board * game) {
 
         game -> getMunchieValue() = rand() % 8 + 1;
         char val = game -> getMunchieValue() + '0';
-        mvaddch(game -> getMunchie().x, game -> getMunchie().y, val);
+        displayChar(game -> getMunchie().x, game -> getMunchie().y, val);
         game -> isLiveMunchie() = true;
 
-    }
-
-    if (game -> getCurrent().x == game -> getMunchie().x && game -> getCurrent().y == game -> getMunchie().y) {
-        game -> getMunchieCountdown() += game -> getMunchieValue();
-        game -> getMunchieValue() = 0;
-        game -> isLiveMunchie() = false;
-    }
-
-    if (game -> getMunchieCountdown() > 0) {
-        mvaddch(0,0,'!');
-        game -> getMunchieCountdown()--;
-    } else {
-        mvaddch(0,0,'?');
     }
 }
 
@@ -121,4 +159,8 @@ void terminate( void )
     clear();
     refresh();
     endwin();
+}
+
+void displayChar(int x, int y, char c) {
+    mvaddch(x + verticalOffset, y, c);
 }

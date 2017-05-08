@@ -21,6 +21,7 @@ Board::Board(int row, int col) {
     head = tail = 0;
     totalScore = 0;
     int count = 0;
+    win = false;
 
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
@@ -59,4 +60,15 @@ void Board::addToFree(int x, int y) {
         freepool[lastIdx] = temp;
         board[x][y] = lastIdx;
     }
+}
+
+void Board::growWorm(coord newHead, coord oldHead) {
+
+    setWorm(getNextIdx(), getCurrent());
+    removeFromFree(getCurrent().x, getCurrent().y);
+
+}
+
+void Board::moveWorm(char direction) {
+
 }

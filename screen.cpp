@@ -11,10 +11,11 @@ const int verticalOffset = 1;
 
 void startup( void );
 void terminate( void );
-void genMunchies(Board * game, int numRows, int numCols);
+void genMunchies(Board * game);
 void moveWorm(Board * game, char c);
 bool validate(Board * game, int numRows, int numCols);
 void displayChar(int x, int y, char c);
+void updateScore(Board * game, int numRows, int numCols);
 
 int main(int argc, const char * argv[])
 {
@@ -46,19 +47,25 @@ int main(int argc, const char * argv[])
     int munchieCount = 0;
     char c;
     displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
-    genMunchies(game, numRows, numCols);
+    genMunchies(game);
+    updateScore(game, numRows, numCols);
     refresh();
     while ((c = get_char())) {
         // Generates a munchy whenever needed
-        genMunchies(game, numRows, numCols);
+        genMunchies(game);
         // Makes the move
         moveWorm(game, c);
         // Makes sure current position is legal
         if (!validate(game, numRows, numCols)) { break; }
         // Update display
-    	refresh();
+    	updateScore(game, numRows, numCols);
+        refresh();
     }
     terminate();
+    if (!game -> isWin()) {
+        std::cout << "You hit an obstacle!" << std::endl;
+        std::cout << "Total points: " << game -> getScore() << std::endl;
+    }
     delete game;
     return 0;
 }
@@ -68,8 +75,9 @@ bool validate(Board * game, int numRows, int numCols) {
     if (game -> getCurrent().x == 0 ||
     game -> getCurrent().x == numRows - 1 ||
     game -> getCurrent().y == 0 ||
-    game -> getCurrent().y == numCols - 1)
+    game -> getCurrent().y == numCols - 1) {
         return false;
+    }
 
     // Checks if we hit ourself
     if (game -> getMatrixVal(game -> getCurrent().x, game -> getCurrent().y) == -1)
@@ -110,13 +118,14 @@ void moveWorm(Board * game, char c) {
     game -> getPrevious().y = game -> getCurrent().y;
 }
 
-void genMunchies(Board * game, int numRows, int numCols) {
+void updateScore(Board * game, int numRows, int numCols) {
     std::string temp;
     temp = std::to_string(game -> getScore());
     const char * output = temp.c_str();
     mvaddstr(0, numCols -4, output);
-    refresh();
+}
 
+void genMunchies(Board * game) {
     if (game -> getCurrent().x == game -> getMunchie().x && game -> getCurrent().y == game -> getMunchie().y) {
         game -> getMunchieCountdown() += game -> getMunchieValue();
         game -> getScore() += game -> getMunchieValue();

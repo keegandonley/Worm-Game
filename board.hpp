@@ -10,55 +10,45 @@ public:
         int x;
         int y;
     };
-    int getMatrixVal(int x, int y) {
-	       return board[x][y];
-    }
+    int getMatrixVal(int x, int y) { return board[x][y]; }
     void removeFromFree(int x, int y);
     void addToFree(int x, int y);
-    int  getLastIdx() {
-	       return lastIdx;
-    }
-    coord getCoords(int idx) {
-	       return freepool[idx];
-    }
-    coord& getCurrent() {
-        return currentPos;
-    }
-    coord& getPrevious() {
-        return previousPos;
-    }
-    coord& getMunchie() {
-        return currentMunchiePos;
-    }
-    bool& isLiveMunchie() {
-        return liveMunchie;
-    }
-    int& getMunchieValue() {
-        return munchieValue;
-    }
-    int& getMunchieCountdown() {
-        return munchieCountdown;
-    }
-    int& getScore() {
-        return totalScore;
-    }
+    int  getLastIdx() { return lastIdx; }
+    coord getCoords(int idx) { return freepool[idx]; }
+    coord& getCurrent() { return currentPos; }
+    coord& getPrevious() { return previousPos; }
+    coord& getMunchie() { return currentMunchiePos; }
+    bool& isLiveMunchie() { return liveMunchie; }
+    int& getMunchieValue() { return munchieValue; }
+    int& getMunchieCountdown() { return munchieCountdown; }
+    int& getScore() { return totalScore; }
+    bool& isWin() { return win; }
+
+    void setWorm(int idx, coord point) { worm[idx] = point; }
+    void setHeadAndTail(int h, int t) {head = h; tail = t; }
+    void growWorm(coord newHead, coord oldHead);
+    void moveWorm(char direction);
+    int getNextIdx() { return tail + 1; }
 private:
+
     int     lastIdx;
-    int   **board;
-    coord * freepool;
-    coord * worm;
+    int     **board;
+    coord   *freepool;
+    coord   *worm;
 
-    int head;
-    int tail;
+    int     head;
+    int     tail;
 
-    bool activeMunchie;
-    bool liveMunchie;
-    int munchieValue;
-    int munchieCountdown;
-    int totalScore;
-    coord currentPos;
-    coord previousPos;
-    coord currentMunchiePos;
+    bool    activeMunchie;
+    bool    liveMunchie;
+    int     munchieValue;
+    int     munchieCountdown;
+    int     totalScore;
+    coord   currentPos;
+    coord   previousPos;
+    coord   currentMunchiePos;
+
+    bool    win;
 
 };
 

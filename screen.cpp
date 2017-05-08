@@ -48,7 +48,7 @@ int main(int argc, const char * argv[])
     displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
     genMunchies(game, numRows, numCols);
     refresh();
-    while (c = get_char()) {
+    while ((c = get_char())) {
         // Generates a munchy whenever needed
         genMunchies(game, numRows, numCols);
         // Makes the move
@@ -116,7 +116,7 @@ void genMunchies(Board * game, int numRows, int numCols) {
     const char * output = temp.c_str();
     mvaddstr(0, numCols -4, output);
     refresh();
-    
+
     if (game -> getCurrent().x == game -> getMunchie().x && game -> getCurrent().y == game -> getMunchie().y) {
         game -> getMunchieCountdown() += game -> getMunchieValue();
         game -> getScore() += game -> getMunchieValue();

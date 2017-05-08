@@ -14,4 +14,5 @@ clean:
 	/bin/rm -f *.x *.o *~
 
 run:
+	make screen.x
 	./screen.x 25 80

@@ -11,7 +11,7 @@ board.o: board.cpp board.hpp
 	gcc -c -ggdb board.cpp -o board.o
 
 clean:
-	/bin/rm -f screen.x screen.o getChar.o *~
+	/bin/rm -f *.x *.o *~
 
 run:
 	./screen.x 25 80

@@ -12,7 +12,7 @@ const int verticalOffset = 0;
 void startup( void );
 void terminate( void );
 void genMunchies(Board * game);
-void moveWorm(Board * game, char c, int numRows, int numCols);
+bool moveWorm(Board * game, char c, int numRows, int numCols);
 bool validate(Board * game, int numRows, int numCols);
 void displayChar(int x, int y, char c);
 void updateScore(Board * game, int numRows, int numCols);
@@ -47,7 +47,6 @@ int main(int argc, const char * argv[])
     bool seenMunchie = false;
     int munchieCount = 0;
     char c;
-    displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
     genMunchies(game);
     updateScore(game, numRows, numCols);
     refresh();
@@ -55,9 +54,7 @@ int main(int argc, const char * argv[])
         // Generates a munchy whenever needed
         genMunchies(game);
         // Makes the move
-        moveWorm(game, c, numRows, numCols);
-        // Makes sure current position is legal
-        if (!validate(game, numRows, numCols)) { break; }
+        if (!moveWorm(game, c, numRows, numCols)) { break; }
         // Update display
     	updateScore(game, numRows, numCols);
         refresh();
@@ -87,12 +84,11 @@ bool validate(Board * game, int numRows, int numCols) {
     return true;
 }
 
-void moveWorm(Board * game, char c, int numRows, int numCols) {
+bool moveWorm(Board * game, char c, int numRows, int numCols) {
     if (game -> getMunchieCountdown() > 0) {
-        game -> growWorm(c);
-
+        return game -> growWorm(c);
     } else {
-        game -> moveWorm(c);
+        return game -> moveWorm(c);
     }
 
 

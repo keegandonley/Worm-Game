@@ -26,8 +26,8 @@ public:
 
     void setWorm(int numRows, int numCols);
     void setHeadAndTail(int h, int t) {head = h; tail = t; }
-    void growWorm(char direction);
-    void moveWorm(char direction);
+    bool growWorm(char direction);
+    bool moveWorm(char direction);
     int getNextIdx() { return tail + 1; }
     int moveTail();
     int moveHead(coord current);

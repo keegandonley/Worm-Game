@@ -66,15 +66,27 @@ void Board::addToFree(int x, int y) {
     }
 }
 
-void Board::growWorm(char direction) {
+bool Board::growWorm(char direction) {
     if (direction == LEFT) {
         (getCurrent().y)--;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     } else if (direction == DOWN) {
         (getCurrent().x)++;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     } else if (direction == RIGHT) {
         (getCurrent().y)++;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     } else if (direction == UP) {
         (getCurrent().x)--;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     }
     if (direction == UP || direction == DOWN || direction == LEFT || direction == RIGHT) {
         moveHead(getCurrent());
@@ -83,17 +95,30 @@ void Board::growWorm(char direction) {
         mvaddch(worm[head].x, worm[head].y, '@');
         getPrevious() = getCurrent();
     }
+    return true;
 }
 
-void Board::moveWorm(char direction) {
+bool Board::moveWorm(char direction) {
     if (direction == LEFT) {
         (getCurrent().y)--;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     } else if (direction == DOWN) {
         (getCurrent().x)++;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     } else if (direction == RIGHT) {
         (getCurrent().y)++;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     } else if (direction == UP) {
         (getCurrent().x)--;
+        if (board[getCurrent().x][getCurrent().y] == -1) {
+            return false;
+        }
     }
     if (direction == UP || direction == DOWN || direction == LEFT || direction == RIGHT) {
         mvaddch(worm[tail].x, worm[tail].y, ' ');
@@ -104,6 +129,7 @@ void Board::moveWorm(char direction) {
         mvaddch(worm[head].x, worm[head].y, '@');
         getPrevious() = getCurrent();
     }
+    return true;
 }
 
 int Board::moveHead(coord current) {
@@ -135,9 +161,14 @@ void Board::setWorm(int numRows, int numCols) {
     temp.y = numCols / 2;
     for (int i = 0; i < 8; i++) {
         worm[i] = temp;
-        temp.y++;
-        mvaddch(temp.x, temp.y, 'o');
+        if (i == 0) {
+            mvaddch(temp.x, temp.y, '@');
+        } else {
+            mvaddch(temp.x, temp.y, 'o');
+        }
         removeFromFree(temp.x, temp.y);
+        temp.y++;
+
     }
     head = 0;
     tail = 7;

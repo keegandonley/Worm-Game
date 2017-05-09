@@ -24,17 +24,22 @@ public:
     int& getScore() { return totalScore; }
     bool& isWin() { return win; }
 
-    void setWorm(int idx, coord point) { worm[idx] = point; }
+    void setWorm(int numRows, int numCols);
     void setHeadAndTail(int h, int t) {head = h; tail = t; }
-    void growWorm(coord newHead, coord oldHead);
+    void growWorm(char direction);
     void moveWorm(char direction);
     int getNextIdx() { return tail + 1; }
+    int moveTail();
+    int moveHead(coord current);
+
+
 private:
 
     int     lastIdx;
     int     **board;
     coord   *freepool;
     coord   *worm;
+    int     wormLastIdx;
 
     int     head;
     int     tail;

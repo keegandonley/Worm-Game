@@ -7,12 +7,12 @@
 #include <string>
 #include <iomanip>
 
-const int verticalOffset = 1;
+const int verticalOffset = 0;
 
 void startup( void );
 void terminate( void );
 void genMunchies(Board * game);
-void moveWorm(Board * game, char c);
+void moveWorm(Board * game, char c, int numRows, int numCols);
 bool validate(Board * game, int numRows, int numCols);
 void displayChar(int x, int y, char c);
 void updateScore(Board * game, int numRows, int numCols);
@@ -42,6 +42,7 @@ int main(int argc, const char * argv[])
     mvaddstr(0, numCols-12, "Score: ");
     refresh();
     Board * game = new Board(numRows, numCols);
+    game -> setWorm(numRows, numCols);
 
     bool seenMunchie = false;
     int munchieCount = 0;
@@ -54,7 +55,7 @@ int main(int argc, const char * argv[])
         // Generates a munchy whenever needed
         genMunchies(game);
         // Makes the move
-        moveWorm(game, c);
+        moveWorm(game, c, numRows, numCols);
         // Makes sure current position is legal
         if (!validate(game, numRows, numCols)) { break; }
         // Update display
@@ -86,36 +87,34 @@ bool validate(Board * game, int numRows, int numCols) {
     return true;
 }
 
-void moveWorm(Board * game, char c) {
-    if (c == LEFT) {
-        (game -> getCurrent().y)--;
-    } else if (c == DOWN) {
-        (game -> getCurrent().x)++;
-    } else if (c == RIGHT) {
-        (game -> getCurrent().y)++;
-    } else if (c == UP) {
-        (game -> getCurrent().x)--;
-    }
+void moveWorm(Board * game, char c, int numRows, int numCols) {
+    if (game -> getMunchieCountdown() > 0) {
+        game -> growWorm(c);
 
-    Board::coord head;
-    head.x = game -> getCurrent().x;
-    head.y = game -> getCurrent().y;
-
-    // Move the head
-    if (game -> getPrevious().x != 0 && game -> getPrevious().y != 0) {
-        displayChar(game -> getPrevious().x, game -> getPrevious().y, ' ');
-        displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
-        refresh();
+    } else {
+        game -> moveWorm(c);
     }
 
 
-    // Update the free pool
-    // game -> removeFromFree(game -> getCurrent().x, game -> getCurrent().y);
-    // game -> addToFree(game -> getPrevious().x, game -> getPrevious().y);
-
-    // Update the previous position
-    game -> getPrevious().x = game -> getCurrent().x;
-    game -> getPrevious().y = game -> getCurrent().y;
+    // Board::coord head;
+    // head.x = game -> getCurrent().x;
+    // head.y = game -> getCurrent().y;
+    //
+    // // Move the head
+    // if (game -> getPrevious().x != 0 && game -> getPrevious().y != 0) {
+    //     displayChar(game -> getPrevious().x, game -> getPrevious().y, ' ');
+    //     displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
+    //     refresh();
+    // }
+    //
+    //
+    // // Update the free pool
+    // // game -> removeFromFree(game -> getCurrent().x, game -> getCurrent().y);
+    // // game -> addToFree(game -> getPrevious().x, game -> getPrevious().y);
+    //
+    // // Update the previous position
+    // game -> getPrevious().x = game -> getCurrent().x;
+    // game -> getPrevious().y = game -> getCurrent().y;
 }
 
 void updateScore(Board * game, int numRows, int numCols) {

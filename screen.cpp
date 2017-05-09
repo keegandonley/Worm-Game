@@ -13,7 +13,6 @@ void startup( void );
 void terminate( void );
 void genMunchies(Board * game);
 bool moveWorm(Board * game, char c, int numRows, int numCols);
-bool validate(Board * game, int numRows, int numCols);
 void displayChar(int x, int y, char c);
 void updateScore(Board * game, int numRows, int numCols);
 
@@ -66,22 +65,6 @@ int main(int argc, const char * argv[])
     }
     delete game;
     return 0;
-}
-
-bool validate(Board * game, int numRows, int numCols) {
-    // Checks if we hit the walls
-    if (game -> getCurrent().x == 0 ||
-    game -> getCurrent().x == numRows - 1 ||
-    game -> getCurrent().y == 0 ||
-    game -> getCurrent().y == numCols - 1) {
-        return false;
-    }
-
-    // Checks if we hit ourself
-    if (game -> getMatrixVal(game -> getCurrent().x, game -> getCurrent().y) == -1)
-        return false;
-
-    return true;
 }
 
 bool moveWorm(Board * game, char c, int numRows, int numCols) {

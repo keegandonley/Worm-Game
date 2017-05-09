@@ -45,14 +45,16 @@ Board::Board(int row, int col) {
 }
 
 void Board::removeFromFree(int x, int y) {
-    int location = board[x][y]; // This is the freepool index to delete
-    coord swap = freepool[lastIdx]; // This is the coordinates we must keep!
-    coord temp = freepool[location]; // This is the coordinates we are deleting!
-    freepool[location] = swap;
-    freepool[lastIdx] = temp;
-    board[swap.x][swap.y] = location;
-    board[x][y] = - 1;
-    lastIdx--;
+    if (board[x][y] != -1) {
+        int location = board[x][y]; // This is the freepool index to delete
+        coord swap = freepool[lastIdx]; // This is the coordinates we must keep!
+        coord temp = freepool[location]; // This is the coordinates we are deleting!
+        freepool[location] = swap;
+        freepool[lastIdx] = temp;
+        board[swap.x][swap.y] = location;
+        board[x][y] = - 1;
+        lastIdx--;
+    }
 }
 
 void Board::addToFree(int x, int y) {
@@ -158,8 +160,9 @@ int Board::moveTail() {
 void Board::setWorm(int numRows, int numCols) {
     coord temp;
     temp.x = numRows / 2;
-    temp.y = numCols / 2;
+    temp.y = numCols / 2 - 1;
     for (int i = 0; i < 8; i++) {
+        temp.y++;
         worm[i] = temp;
         if (i == 0) {
             mvaddch(temp.x, temp.y, '@');
@@ -167,7 +170,7 @@ void Board::setWorm(int numRows, int numCols) {
             mvaddch(temp.x, temp.y, 'o');
         }
         removeFromFree(temp.x, temp.y);
-        temp.y++;
+
 
     }
     head = 0;

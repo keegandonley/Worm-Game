@@ -1,5 +1,5 @@
-screen.x:  screen.o getChar.o board.o
-	g++ -ggdb -o screen.x screen.o getChar.o board.o -lcurses -ltermcap
+worm.x:  screen.o getChar.o board.o
+	g++ -ggdb -o worm.x screen.o getChar.o board.o -lcurses -ltermcap
 
 screen.o: screen.cpp board.cpp board.hpp directions.hpp move.hpp
 	g++ -std=c++11 -c -ggdb screen.cpp -o screen.o
@@ -14,5 +14,5 @@ clean:
 	/bin/rm -f *.x *.o *~
 
 run:
-	make screen.x
-	./screen.x 25 80
+	make worm.x
+	./worm.x 25 80

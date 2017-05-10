@@ -1,4 +1,5 @@
-# CS 315 Project 5
+# Worm Game
+## CS 315 Project 5
 ## Keegan Donley
 ### 5/9/2017
 
@@ -14,6 +15,9 @@ The worm moves in the following way:
 - k: UP
 - l: RIGHT
 
+Running with no arguments `./worm.x` will use a default value of 20 x 30. The screen size can be set using
+command line arguments. `./worm.x 25 40` will start a game of 25 x 40. The maximum size is 25 x 80. Anything
+entered larger than that will be automatically be reduced to the maximum size.
 
 The worm is initialized with a head and 7 body segments in the center of the screen.
 

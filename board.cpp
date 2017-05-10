@@ -2,6 +2,7 @@
 #include "directions.hpp"
 #include <iostream>
 #include <curses.h>
+#include "move.hpp"
 
 Board::Board(int row, int col) {
     board = new int * [row];
@@ -93,8 +94,8 @@ bool Board::growWorm(char direction) {
     if (direction == UP || direction == DOWN || direction == LEFT || direction == RIGHT) {
         moveHead(getCurrent());
         coord previous = getPrevious();
-        mvaddch(previous.x, previous.y, 'o');
-        mvaddch(worm[head].x, worm[head].y, '@');
+        moveChar(previous.x, previous.y, 'o');
+        moveChar(worm[head].x, worm[head].y, '@');
         getPrevious() = getCurrent();
     }
     return true;
@@ -123,12 +124,12 @@ bool Board::moveWorm(char direction) {
         }
     }
     if (direction == UP || direction == DOWN || direction == LEFT || direction == RIGHT) {
-        mvaddch(worm[tail].x, worm[tail].y, ' ');
+        moveChar(worm[tail].x, worm[tail].y, ' ');
         moveTail();
         moveHead(getCurrent());
         coord previous = getPrevious();
-        mvaddch(previous.x, previous.y, 'o');
-        mvaddch(worm[head].x, worm[head].y, '@');
+        moveChar(previous.x, previous.y, 'o');
+        moveChar(worm[head].x, worm[head].y, '@');
         getPrevious() = getCurrent();
     }
     return true;
@@ -165,9 +166,9 @@ void Board::setWorm(int numRows, int numCols) {
         temp.y++;
         worm[i] = temp;
         if (i == 0) {
-            mvaddch(temp.x, temp.y, '@');
+            moveChar(temp.x, temp.y, '@');
         } else {
-            mvaddch(temp.x, temp.y, 'o');
+            moveChar(temp.x, temp.y, 'o');
         }
         removeFromFree(temp.x, temp.y);
 

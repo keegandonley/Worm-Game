@@ -1,4 +1,6 @@
 #include <iostream>
+#include <curses.h>
+
 #ifndef __BOARD
 #define __BOARD
 

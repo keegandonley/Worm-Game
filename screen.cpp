@@ -4,10 +4,11 @@
 #include "getChar.hpp"
 #include "board.hpp"
 #include "directions.hpp"
+#include "move.hpp"
 #include <string>
 #include <iomanip>
 
-const int verticalOffset = 0;
+const int verticalOffset = 1;
 
 void startup( void );
 void terminate( void );
@@ -73,27 +74,6 @@ bool moveWorm(Board * game, char c, int numRows, int numCols) {
     } else {
         return game -> moveWorm(c);
     }
-
-
-    // Board::coord head;
-    // head.x = game -> getCurrent().x;
-    // head.y = game -> getCurrent().y;
-    //
-    // // Move the head
-    // if (game -> getPrevious().x != 0 && game -> getPrevious().y != 0) {
-    //     displayChar(game -> getPrevious().x, game -> getPrevious().y, ' ');
-    //     displayChar(game -> getCurrent().x, game -> getCurrent().y, '@');
-    //     refresh();
-    // }
-    //
-    //
-    // // Update the free pool
-    // // game -> removeFromFree(game -> getCurrent().x, game -> getCurrent().y);
-    // // game -> addToFree(game -> getPrevious().x, game -> getPrevious().y);
-    //
-    // // Update the previous position
-    // game -> getPrevious().x = game -> getCurrent().x;
-    // game -> getPrevious().y = game -> getCurrent().y;
 }
 
 void updateScore(Board * game, int numRows, int numCols) {
@@ -124,7 +104,7 @@ void genMunchies(Board * game) {
 
         game -> getMunchieValue() = rand() % 8 + 1;
         char val = game -> getMunchieValue() + '0';
-        displayChar(game -> getMunchie().x, game -> getMunchie().y, val);
+        displayChar(game -> getMunchie().x - verticalOffset, game -> getMunchie().y, val);
         game -> isLiveMunchie() = true;
 
     }
@@ -149,5 +129,5 @@ void terminate( void )
 }
 
 void displayChar(int x, int y, char c) {
-    mvaddch(x + verticalOffset, y, c);
+    moveChar(x + verticalOffset, y, c);
 }

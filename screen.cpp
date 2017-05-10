@@ -8,7 +8,6 @@
 #include <string>
 #include <iomanip>
 
-const int verticalOffset = 1;
 
 void startup( void );
 void terminate( void );
@@ -19,18 +18,19 @@ void updateScore(Board * game, int numRows, int numCols);
 
 int main(int argc, const char * argv[])
 {
-    if (argc < 3) {
-        std::cout << "Please enter the screen size\n";
-        exit (1);
+    int numRows = 20, numCols = 30;
+    if (argc > 2) {
+        numRows = atoi(argv[1]);
+        numCols = atoi(argv[2]);
+        if (numRows < 10 || numRows > 25 || numCols < 10 || numCols > 80) {
+            numRows = 25;
+            numCols = 80;
+        }
     }
 
-    int numRows = atoi(argv[1]);
-    int numCols = atoi(argv[2]);
 
-    if (numRows < 10 || numRows > 25 || numCols < 10 || numCols > 80) {
-        std::cout << "Please enter a screen size between 10x10 and 25x80\n";
-        exit (2);
-    }
+
+
     startup();
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numCols; j++) {
@@ -85,7 +85,7 @@ void updateScore(Board * game, int numRows, int numCols) {
 
 void genMunchies(Board * game) {
     if (game -> getCurrent().x == game -> getMunchie().x && game -> getCurrent().y == game -> getMunchie().y) {
-        game -> getMunchieCountdown() += game -> getMunchieValue();
+        game -> getMunchieCountdown() += game -> getMunchieValue() + 1;
         game -> getScore() += game -> getMunchieValue();
         game -> getMunchieValue() = 0;
         game -> isLiveMunchie() = false;
@@ -104,7 +104,7 @@ void genMunchies(Board * game) {
 
         game -> getMunchieValue() = rand() % 8 + 1;
         char val = game -> getMunchieValue() + '0';
-        displayChar(game -> getMunchie().x - verticalOffset, game -> getMunchie().y, val);
+        displayChar(game -> getMunchie().x, game -> getMunchie().y, val);
         game -> isLiveMunchie() = true;
 
     }
@@ -129,5 +129,5 @@ void terminate( void )
 }
 
 void displayChar(int x, int y, char c) {
-    moveChar(x + verticalOffset, y, c);
+    moveChar(x, y, c);
 }

@@ -12,7 +12,7 @@ Board::Board(int row, int col) {
 
     int fp    = (row - 2) * (col - 2);
     currentPos.x = row/2;
-    currentPos.y = col/2;
+    currentPos.y = col/2 - 4;
     previousPos.x = currentPos.x;
     previousPos.y = currentPos.y;
     activeMunchie = false;
@@ -161,7 +161,7 @@ int Board::moveTail() {
 void Board::setWorm(int numRows, int numCols) {
     coord temp;
     temp.x = numRows / 2;
-    temp.y = numCols / 2 - 1;
+    temp.y = numCols / 2 - 5;
     for (int i = 0; i < 8; i++) {
         temp.y++;
         worm[i] = temp;
@@ -171,8 +171,6 @@ void Board::setWorm(int numRows, int numCols) {
             moveChar(temp.x, temp.y, 'o');
         }
         removeFromFree(temp.x, temp.y);
-
-
     }
     head = 0;
     tail = 7;

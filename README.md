@@ -1,11 +1,11 @@
 # Worm Game
-## CS 315 Project 5
-## Keegan Donley
-### 5/9/2017
+### CS 315 Project 5
+### Keegan Donley
+#### 5/9/2017
 
-Everything works in this project as needed in the project specifications.
-The only difference, is my worm starts with the head on the left hand side instead
-of on the right.
+Everything works in this project as needed in the [project specifications](http://www.cs.sonoma.edu/~cs315/projects/worm/worm.pdf).
+The only difference is my worm starts with the head on the left hand side instead
+of on the right. Functionally, the game is playable the same way.
 
 
 The worm moves in the following way:

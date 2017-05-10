@@ -1,18 +1,18 @@
-## CS 315 Project 5
-# Keegan Donley
-# 5/9/2017
+# CS 315 Project 5
+## Keegan Donley
+### 5/9/2017
 
 Everything works in this project as needed in the project specifications.
-
 The only difference, is my worm starts with the head on the left hand side instead
 of on the right.
 
 
 The worm moves in the following way:
-h: LEFT
-j: DOWN
-k: UP
-l: RIGHT
+
+- h: LEFT
+- j: DOWN
+- k: UP
+- l: RIGHT
 
 
 The worm is initialized with a head and 7 body segments in the center of the screen.

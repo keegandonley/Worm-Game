@@ -7,7 +7,7 @@ screen.o: screen.cpp board.cpp board.hpp directions.hpp move.hpp
 getChar.o: getChar.cpp getChar.hpp directions.hpp
 	gcc -c -ggdb getChar.cpp -o getChar.o
 
-board.o: board.cpp board.hpp move.hpp
+board.o: board.cpp board.hpp move.hpp directions.hpp
 	gcc -c -ggdb board.cpp -o board.o
 
 clean:

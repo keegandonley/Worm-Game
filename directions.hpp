@@ -7,6 +7,8 @@
 #ifndef __DIRS
 #define __DIRS
 
-enum {LEFT = 'a', RIGHT = 'd', UP = 'w', DOWN = 's'};
+// enum {LEFT = 'a', RIGHT = 'd', UP = 'w', DOWN = 's'};
+enum {LEFT = 'h', RIGHT = 'l', UP = 'k', DOWN = 'j'};
+
 
 #endif

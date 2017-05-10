@@ -4,6 +4,7 @@
 #include <curses.h>
 #include "move.hpp"
 
+// Initializes the game board with all of the proper values.
 Board::Board(int row, int col) {
     board = new int * [row];
     for (int i = 0; i < row; i++) {
@@ -30,7 +31,6 @@ Board::Board(int row, int col) {
 
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
-            // KEEGAN READ THIS: NEVER CHANGE THE FUCKING POOL WITHOUT CHANGING THE BOARD
             if (i == 0 || i == row - 1 || j == 0 || j == col - 1) {
                 board[i][j]     = -1;
             } else {
@@ -45,6 +45,7 @@ Board::Board(int row, int col) {
     }
 }
 
+// Removes a given coordinate from the free pool if it is free
 void Board::removeFromFree(int x, int y) {
     if (board[x][y] != -1) {
         int location = board[x][y]; // This is the freepool index to delete
@@ -58,6 +59,7 @@ void Board::removeFromFree(int x, int y) {
     }
 }
 
+// Adds a given coordinate to the free pool if it isn't already free
 void Board::addToFree(int x, int y) {
     if (board[x][y] == -1) {
         Board::coord temp;
@@ -69,6 +71,7 @@ void Board::addToFree(int x, int y) {
     }
 }
 
+// Grows the worm (doesn't cut off the tail when moving)
 bool Board::growWorm(char direction) {
     if (direction == LEFT) {
         (getCurrent().y)--;
@@ -101,6 +104,7 @@ bool Board::growWorm(char direction) {
     return true;
 }
 
+// Moves the worm - (moves the head and tail together)
 bool Board::moveWorm(char direction) {
     if (direction == LEFT) {
         (getCurrent().y)--;
@@ -135,6 +139,7 @@ bool Board::moveWorm(char direction) {
     return true;
 }
 
+// Adjusts the worm head in the circular array
 int Board::moveHead(coord current) {
     int temp = head;
     removeFromFree(worm[temp].x, worm[temp].y);
@@ -147,6 +152,7 @@ int Board::moveHead(coord current) {
     return head;
 }
 
+// Adjusts the worm tail in the circular array
 int Board::moveTail() {
     int temp = tail;
     addToFree(worm[temp].x, worm[temp].y);
@@ -158,6 +164,7 @@ int Board::moveTail() {
     return tail;
 }
 
+// Initilizes the worm at the center of the screen
 void Board::setWorm(int numRows, int numCols) {
     coord temp;
     temp.x = numRows / 2;

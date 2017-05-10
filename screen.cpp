@@ -1,3 +1,10 @@
+// Keegan Donley
+// CS 315
+// Project 5
+// screen.cpp
+
+// This file manges the main gameplay, as well as handling
+// starting and ending curses.
 #include <curses.h>
 #include <cstdlib>
 #include <iostream>
@@ -28,9 +35,7 @@ int main(int argc, const char * argv[])
         }
     }
 
-
-
-
+    // Print the * characters for the border and the title
     startup();
     for (int i = 0; i < numRows; i++) {
         for (int j = 0; j < numCols; j++) {
@@ -41,33 +46,52 @@ int main(int argc, const char * argv[])
     mvaddstr(0,0,"Worm Game");
     mvaddstr(0, numCols-12, "Score: ");
     refresh();
+
+
+    // Initialize the game board and place the character
     Board * game = new Board(numRows, numCols);
     game -> setWorm(numRows, numCols);
-
     bool seenMunchie = false;
     int munchieCount = 0;
     char c;
+
+    // Generate the first munchie and render the score
     genMunchies(game);
     updateScore(game, numRows, numCols);
     refresh();
+
+    // Continually receive input
     while ((c = get_char())) {
+
         // Generates a munchy whenever needed
         genMunchies(game);
-        // Makes the move
+
+        // Makes the move and validates. If the move was invalid, the loop
+        // breaks and the user has lost.
         if (!moveWorm(game, c, numRows, numCols)) { break; }
+
         // Update display
     	updateScore(game, numRows, numCols);
         refresh();
     }
+    // The game is over; the player has either lost or won
     terminate();
+
+    // If loss, display the loss message
     if (!game -> isWin()) {
         std::cout << "You hit an obstacle!" << std::endl;
         std::cout << "Total points: " << game -> getScore() << std::endl;
+    } else {
+        // If win, display the win message
+        std::cout << "You won!" << std::endl;
+        std::cout << "Total points: " << game -> getScore() << std::endl;
     }
+
     delete game;
     return 0;
 }
 
+// Determines if the worm needs to move or grow
 bool moveWorm(Board * game, char c, int numRows, int numCols) {
     if (game -> getMunchieCountdown() > 0) {
         return game -> growWorm(c);
@@ -76,6 +100,7 @@ bool moveWorm(Board * game, char c, int numRows, int numCols) {
     }
 }
 
+// Displays the new score on-screen
 void updateScore(Board * game, int numRows, int numCols) {
     std::string temp;
     temp = std::to_string(game -> getScore());
@@ -83,6 +108,7 @@ void updateScore(Board * game, int numRows, int numCols) {
     mvaddstr(0, numCols -4, output);
 }
 
+// Generates a single from the free pool locations with a value of 1-9
 void genMunchies(Board * game) {
     if (game -> getCurrent().x == game -> getMunchie().x && game -> getCurrent().y == game -> getMunchie().y) {
         game -> getMunchieCountdown() += game -> getMunchieValue() + 1;
